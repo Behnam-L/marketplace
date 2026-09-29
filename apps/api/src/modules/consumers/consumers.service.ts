@@ -94,6 +94,10 @@ export class ConsumersService implements OnModuleInit {
     return m.findOneOrFail(ConsumerUser, { where: { phoneE164 } });
   }
 
+  async idByPhone(phoneE164: string): Promise<string | null> {
+    return (await this.ds.manager.findOne(ConsumerUser, { where: { phoneE164 } }))?.id ?? null;
+  }
+
   get(id: string, m: EntityManager = this.ds.manager): Promise<ConsumerUser | null> {
     return m.findOne(ConsumerUser, { where: { id } });
   }

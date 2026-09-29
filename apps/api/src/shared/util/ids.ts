@@ -6,7 +6,7 @@ export type IdPrefix =
   | 'ord' | 'res' | 'btx' | 'ptx' | 'doc' | 'inv' | 'rfd' | 'mer' | 'prv' | 'csm' | 'adm'
   | 'evt' | 'chs' | 'otp' | 'lnk' | 'ida' | 'inq' | 'iqr' | 'rfl' | 'pln' | 'jnl' | 'lln'
   | 'rec' | 'rol' | 'ses' | 'fil' | 'aud' | 'msg' | 'tpl' | 'whe' | 'key' | 'gtw' | 'stc'
-  | 'psl' | 'pvs' | 'pcl' | 'exp' | 'alr';
+  | 'psl' | 'pvs' | 'pcl' | 'exp' | 'alr' | 'oev';
 
 let lastTime = 0;
 let lastRandom: number[] = [];

@@ -410,11 +410,8 @@ export class DocumentsService {
         WHERE status IN ('Scheduled', 'Matured', 'Invoiced')
         GROUP BY counterparty_type, counterparty_id`,
     );
-    const balances: { account_code: string; owed: string }[] = await m.query(
-      `SELECT account_code, SUM(credit) - SUM(debit) AS owed FROM ledger_line WHERE account_code LIKE 'CP:%' GROUP BY account_code`,
-    );
+    const actual = await this.ledger.creditBalancesByPrefix('CP:', m);
     const expected = new Map(open.map((o) => [Accounts.counterparty(o.counterparty_type, o.counterparty_id), Number(o.owed)]));
-    const actual = new Map(balances.map((b) => [b.account_code, Number(b.owed)]));
     return [...new Set([...expected.keys(), ...actual.keys()])].map((key) => ({
       name: `COUNTERPARTY ${key}`,
       expected: expected.get(key) ?? 0,

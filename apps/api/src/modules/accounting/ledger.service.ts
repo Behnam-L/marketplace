@@ -95,6 +95,15 @@ export class LedgerService {
     return Number(rows[0]?.b ?? 0);
   }
 
+  /** Balances (credit − debit) of every account starting with `prefix`. */
+  async creditBalancesByPrefix(prefix: string, m: EntityManager = this.ds.manager): Promise<Map<string, number>> {
+    const rows: { account_code: string; owed: string }[] = await m.query(
+      `SELECT account_code, SUM(credit) - SUM(debit) AS owed FROM ledger_line WHERE account_code LIKE $1 GROUP BY account_code`,
+      [`${prefix}%`],
+    );
+    return new Map(rows.map((r) => [r.account_code, Number(r.owed)]));
+  }
+
   async entriesFor(sourceId: string, m: EntityManager = this.ds.manager): Promise<{ eventType: string; lines: { account: string; debit: number; credit: number }[] }[]> {
     const entries = await m.find(JournalEntry, { where: { sourceId }, order: { createdAt: 'ASC' } });
     const out = [];

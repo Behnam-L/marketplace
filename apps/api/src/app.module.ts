@@ -15,6 +15,12 @@ import { SettlementsModule } from './modules/settlements/settlements.module';
 import { MerchantsModule } from './modules/merchants/merchants.module';
 import { CreditProvidersModule } from './modules/credit-providers/credit-providers.module';
 import { ConsumersModule } from './modules/consumers/consumers.module';
+import { ReconciliationModule } from './modules/reconciliation/reconciliation.module';
+import { PaymentsModule } from './modules/payments/payments.module';
+import { WalletModule } from './modules/wallet/wallet.module';
+import { TransactionsModule } from './modules/transactions/transactions.module';
+import { OrdersModule } from './modules/orders/orders.module';
+import { CheckoutModule } from './modules/checkout/checkout.module';
 
 @Module({
   imports: [
@@ -34,6 +40,12 @@ import { ConsumersModule } from './modules/consumers/consumers.module';
     MerchantsModule,
     CreditProvidersModule,
     ConsumersModule,
+    ReconciliationModule,
+    PaymentsModule,
+    WalletModule,
+    TransactionsModule,
+    OrdersModule,
+    CheckoutModule,
   ],
 })
 export class AppModule {}

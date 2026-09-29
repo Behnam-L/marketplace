@@ -21,7 +21,7 @@ import { AppError, notFound, stateChanged, validationError } from '../../shared/
 import { isUniqueViolation } from '../../shared/database/tx';
 import { paginate } from '../../shared/database/pagination';
 import { setPrincipal } from '../../shared/http/auth-context';
-import { CryptoService, safeEqual } from '../../shared/security/crypto.service';
+import { CryptoService, hmacSha256Hex, safeEqual } from '../../shared/security/crypto.service';
 import { newId } from '../../shared/util/ids';
 import { AuthRegistry } from '../auth/auth-registry';
 import { FilesService } from '../files/files.service';
@@ -104,6 +104,12 @@ export class MerchantsService implements OnModuleInit {
   private async signingKey(merchantId: string): Promise<{ keyId: string; secret: string } | null> {
     const key = await this.ds.manager.findOne(MerchantApiKey, { where: { merchantId, status: 'Active' }, order: { createdAt: 'DESC' } });
     return key ? { keyId: key.keyId, secret: this.crypto.decrypt(key.secretEnc) } : null;
+  }
+
+  /** FR-005: HMAC for the informational browser return (newest active key). */
+  async signReturn(merchantId: string, data: string): Promise<string | null> {
+    const key = await this.signingKey(merchantId);
+    return key ? hmacSha256Hex(key.secret, data) : null;
   }
 
   /* ─────────── Lookups used by other modules ─────────── */

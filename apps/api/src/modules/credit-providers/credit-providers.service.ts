@@ -65,6 +65,10 @@ export class CreditProvidersService implements OnModuleInit {
     return new Map(rows.map((r) => [r.id, r.displayName]));
   }
 
+  async allIds(): Promise<{ id: string }[]> {
+    return this.ds.manager.find(CreditProvider, { select: { id: true } });
+  }
+
   private toInquirable(p: CreditProvider): InquirableProvider {
     return {
       id: p.id,

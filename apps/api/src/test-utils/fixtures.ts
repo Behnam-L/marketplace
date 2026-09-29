@@ -111,3 +111,13 @@ export async function createProvider(app: INestApplication, ds: DataSource, admi
   await ds.query(`UPDATE credit_provider SET connection_status = 'Connected' WHERE id = $1`, [r.body.id]);
   return r.body.id;
 }
+
+/** Bank gateways used by the checkout tests (the seed creates the same ones). */
+export async function seedGateways(ds: DataSource): Promise<void> {
+  await ds.query(
+    `INSERT INTO bank_gateway (id, code, name, priority, health_status, supports_reverse, supports_refund, credentials_ref)
+     VALUES ('gtw_TESTMOCK', 'MOCK', 'Mock PSP', 1, 'Healthy', true, true, 'vault://psp/mock'),
+            ('gtw_TESTMOCKB', 'MOCK_B', 'Mock PSP B', 2, 'Healthy', false, false, 'vault://psp/mock-b')
+     ON CONFLICT (code) DO NOTHING`,
+  );
+}
