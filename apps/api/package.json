@@ -1,0 +1,51 @@
+{
+  "name": "@bajet/api",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "nest build",
+    "start": "node dist/main.js",
+    "start:dev": "nest start --watch",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "jest --runInBand",
+    "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/database/data-source.ts",
+    "migration:run": "node dist/database/cli/migrate.js",
+    "seed": "node dist/database/cli/seed.js",
+    "admin:bootstrap": "node dist/database/cli/bootstrap-admin.js",
+    "admin:totp": "node dist/database/cli/totp.js",
+    "demo:checkout": "node dist/database/cli/demo-checkout.js"
+  },
+  "dependencies": {
+    "@bajet/contracts": "1.0.0",
+    "@nestjs/common": "^11.1.0",
+    "@nestjs/core": "^11.1.0",
+    "@nestjs/platform-express": "^11.1.0",
+    "@nestjs/schedule": "^6.0.0",
+    "@nestjs/swagger": "^11.2.0",
+    "@nestjs/typeorm": "^11.0.0",
+    "@node-rs/argon2": "^2.0.2",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "cookie-parser": "^1.4.7",
+    "helmet": "^8.1.0",
+    "multer": "^2.0.2",
+    "pg": "^8.16.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "typeorm": "^0.3.27"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.0",
+    "@nestjs/testing": "^11.1.0",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^22.18.0",
+    "@types/supertest": "^6.0.3",
+    "jest": "^30.0.0",
+    "supertest": "^7.1.0",
+    "ts-jest": "^29.4.0",
+    "ts-node": "^10.9.2"
+  }
+}

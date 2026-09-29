@@ -1,0 +1,74 @@
+name: bajet
+
+x-api-env: &api-env
+  NODE_ENV: production
+  PORT: "3000"
+  DB_HOST: db
+  DB_PORT: "5432"
+  DB_USER: ${DB_USER:-bajet}
+  DB_NAME: ${DB_NAME:-bajet}
+  DB_PASSWORD_FILE: /run/bajet-secrets/db_password
+  DATA_ENCRYPTION_KEY_FILE: /run/bajet-secrets/data_encryption_key
+  HASH_PEPPER_FILE: /run/bajet-secrets/hash_pepper
+  BOOTSTRAP_ADMIN_PASSWORD_FILE: /run/bajet-secrets/bootstrap_admin_password
+  BOOTSTRAP_ADMIN_TOTP_SECRET_FILE: /run/bajet-secrets/bootstrap_admin_totp_secret
+  DEMO_MERCHANT_SECRET_FILE: /run/bajet-secrets/demo_merchant_secret
+  BOOTSTRAP_ADMIN_PHONE: ${BOOTSTRAP_ADMIN_PHONE:-09120000000}
+  PUBLIC_WEB_URL: ${PUBLIC_WEB_URL:-http://localhost:8080}
+  PUBLIC_API_URL: ${PUBLIC_API_URL:-http://localhost:8080}
+  COOKIE_SECURE: ${COOKIE_SECURE:-false}
+  MOCK_INTEGRATIONS: "true"
+  JOBS_ENABLED: "true"
+  SEED_DEMO_DATA: ${SEED_DEMO_DATA:-true}
+  FILE_STORAGE_DIR: /var/lib/bajet/files
+  LOG_LEVEL: ${LOG_LEVEL:-log}
+
+services:
+  # Generates random secrets once into a volume (no secrets live in the repository).
+  secrets:
+    build: { context: ., dockerfile: apps/api/Dockerfile }
+    image: bajet-api:local
+    command: ["generate-secrets"]
+    user: root
+    volumes: [secrets:/run/bajet-secrets]
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${DB_USER:-bajet}
+      POSTGRES_DB: ${DB_NAME:-bajet}
+      POSTGRES_PASSWORD_FILE: /run/bajet-secrets/db_password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - secrets:/run/bajet-secrets:ro
+    depends_on:
+      secrets: { condition: service_completed_successfully }
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  api:
+    image: bajet-api:local
+    environment: *api-env
+    volumes:
+      - secrets:/run/bajet-secrets:ro
+      - files:/var/lib/bajet/files
+    depends_on:
+      db: { condition: service_healthy }
+      secrets: { condition: service_completed_successfully }
+    restart: unless-stopped
+
+  web:
+    build: { context: ., dockerfile: apps/web/Dockerfile }
+    image: bajet-web:local
+    ports: ["${WEB_PORT:-8080}:80"]
+    depends_on:
+      api: { condition: service_healthy }
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  secrets:
+  files:

@@ -1,0 +1,17 @@
+{
+  "name": "@bajet/contracts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shared API contracts: DTO types, enums, error codes, permission catalog and shared pure rules",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test --import tsx src/*.test.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.0",
+    "@types/node": "^22.18.0"
+  }
+}
