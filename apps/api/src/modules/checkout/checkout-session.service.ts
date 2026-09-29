@@ -3,7 +3,7 @@ import { ExecutionContext, Inject, Injectable, OnModuleInit } from '@nestjs/comm
 import { Reflector } from '@nestjs/core';
 import { InjectDataSource } from '@nestjs/typeorm';
 import type { Request, Response } from 'express';
-import { DataSource, In } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { TERMINAL_ORDER_STATUSES, type SendOtpResponse } from '@bajet/contracts';
 import { APP_CONFIG, type AppConfig } from '../../config/config.module';
 import { AppError, stateChanged, validationError } from '../../shared/errors/app-error';
@@ -195,9 +195,19 @@ export class CheckoutSessionService implements OnModuleInit {
     };
   }
 
-  /** Current OTP session info for the view (countdowns). */
-  async current(orderId: string): Promise<OtpSession | null> {
-    return this.ds.manager.findOne(OtpSession, { where: { orderId, status: In(['Sent']), dispatchStatus: 'Sent' } });
+  /** The live (sent, unexpired) OTP for the view, so a reloaded page resumes it instead of re-sending. */
+  async current(orderId: string): Promise<SendOtpResponse | null> {
+    const dispatched = await this.ds.manager.find(OtpSession, { where: { orderId, dispatchStatus: 'Sent' }, order: { createdAt: 'DESC' } });
+    const live = dispatched[0];
+    const now = await dbNow(this.ds);
+    if (!live || live.status !== 'Sent' || live.expiresAt.getTime() <= now.getTime()) return null;
+    const s = await this.settings.getAll();
+    return {
+      otpSessionId: live.id,
+      expiresAt: live.expiresAt.toISOString(),
+      resendAvailableAt: new Date(live.createdAt.getTime() + s.otpResendCooldownSeconds * 1000).toISOString(),
+      resendsLeft: Math.max(0, s.otpMaxResends - (dispatched.length - 1)),
+    };
   }
 
   /**

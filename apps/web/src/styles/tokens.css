@@ -1,0 +1,208 @@
+/*
+ * Bon design tokens (design-system.md §3, §3.5 adapter). Values are copied from the
+ * verified tables; Light and Dark come from their own columns (never inverted).
+ */
+:root {
+  /* Schemes — Light */
+  --bon-primary: #3e69e0;
+  --bon-surface-tint: #3e69e0;
+  --bon-on-primary: #ffffff;
+  --bon-primary-container: #eff0ff;
+  --bon-on-primary-container: #00174d;
+  --bon-secondary: #d2e92f;
+  --bon-on-secondary: #191e00;
+  --bon-secondary-container: #f7ffbc;
+  --bon-on-secondary-container: #191e00;
+  --bon-error: #ba1a1a;
+  --bon-on-error: #ffffff;
+  --bon-error-container: #ffdad6;
+  --bon-on-error-container: #410002;
+  --bon-background: #faf8ff;
+  --bon-on-background: #1a1b23;
+  --bon-surface: #faf8ff;
+  --bon-on-surface: #1a1b23;
+  --bon-surface-variant: #e0e1f2;
+  --bon-on-surface-variant: #434654;
+  --bon-outline: #747685;
+  --bon-outline-variant: #e0e1f2;
+  --bon-shadow: #000000;
+  --bon-scrim: #000000;
+  --bon-inverse-surface: #2e3038;
+  --bon-inverse-on-surface: #f0f0fa;
+  --bon-inverse-primary: #b5c4ff;
+  --bon-surface-dim: #d9d9e3;
+  --bon-surface-bright: #ffffff;
+  --bon-surface-container-lowest: #ffffff;
+  --bon-surface-container-low: #faf8ff;
+  --bon-surface-container: #ededf7;
+  --bon-surface-container-high: #e8e7f2;
+  --bon-surface-container-highest: #e2e1ec;
+  --bon-add-ons-section-background: #f4f6ff;
+  --bon-success: #006d38;
+  --bon-on-success: #ffffff;
+  --bon-success-container: #8df9ac;
+  --bon-on-success-container: #00210d;
+  --bon-warning: #825500;
+  --bon-on-warning: #ffffff;
+  --bon-warning-container: #ffddb3;
+  --bon-on-warning-container: #291800;
+
+  /* State layers (independent tokens, §3.1) */
+  --bon-state-primary-rgb: 62 105 224;
+  --bon-state-on-surface-rgb: 27 27 31;
+  --bon-state-error-rgb: 186 26 26;
+  --bon-state-scrim-20: rgb(0 0 0 / 0.2);
+
+  /* Spacing (§3.3) */
+  --bon-space-xxs: 2px;
+  --bon-space-xs: 4px;
+  --bon-space-sm: 6px;
+  --bon-space-md: 8px;
+  --bon-space-lg: 12px;
+  --bon-space-xl: 16px;
+  --bon-space-2xl: 20px;
+  --bon-space-3xl: 24px;
+  --bon-space-4xl: 32px;
+  --bon-space-5xl: 40px;
+  --bon-space-6xl: 48px;
+  --bon-space-7xl: 64px;
+
+  /* Corners (§3.3) */
+  --bon-radius-none: 0;
+  --bon-radius-extra-small: 4px;
+  --bon-radius-small: 8px;
+  --bon-radius-medium: 12px;
+  --bon-radius-large: 16px;
+  --bon-radius-large-increased: 20px;
+  --bon-radius-extra-large: 28px;
+  --bon-radius-extra-large-increased: 32px;
+  --bon-radius-full: 1000px;
+
+  /* Elevation (§3.6, Bon/Shadows) — colour A ≈ rgb(10 12.6667 18), B = rgb(10 13 18) */
+  --bon-shadow-md: 0 2px 4px -2px rgb(10 12.6667 18 / 0.06), 0 4px 6px -1px rgb(10 12.6667 18 / 0.1);
+  --bon-shadow-lg: 0 2px 2px -1px rgb(10 13 18 / 0.04), 0 4px 6px -2px rgb(10 12.6667 18 / 0.03), 0 12px 16px -4px rgb(10 12.6667 18 / 0.08);
+  --bon-shadow-2xl: 0 4px 4px -2px rgb(10 13 18 / 0.04), 0 24px 48px -12px rgb(10 12.6667 18 / 0.18);
+
+  /*
+   * Typography (§3.2). IRANYekanXFaNum is not supplied with this build (no font
+   * files); the stack falls back to locally installed Persian-capable fonts.
+   */
+  --bon-font: 'IRANYekanXFaNum', 'IRANYekanX', 'Vazirmatn', 'Vazir', Tahoma, 'Segoe UI', system-ui, sans-serif;
+  --bon-weight-regular: 400;
+  --bon-weight-medium: 500;
+  --bon-weight-demibold: 600;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bon-primary: #8da8ff;
+    --bon-surface-tint: #b5c4ff;
+    --bon-on-primary: #00297a;
+    --bon-primary-container: #003cac;
+    --bon-on-primary-container: #dbe1ff;
+    --bon-secondary: #bcd20b;
+    --bon-on-secondary: #2d3400;
+    --bon-secondary-container: #424b00;
+    --bon-on-secondary-container: #d2e92f;
+    --bon-error: #ffb4ab;
+    --bon-on-error: #690005;
+    --bon-error-container: #93000a;
+    --bon-on-error-container: #ffdad6;
+    --bon-background: #11131a;
+    --bon-on-background: #e2e1ec;
+    --bon-surface: #080b15;
+    --bon-on-surface: #e2e1ec;
+    --bon-surface-variant: #434654;
+    --bon-on-surface-variant: #c3c6d6;
+    --bon-outline: #8d909f;
+    --bon-outline-variant: #5b5e6c;
+    --bon-inverse-surface: #e2e1ec;
+    --bon-inverse-on-surface: #2e3038;
+    --bon-inverse-primary: #2555cc;
+    --bon-surface-dim: #080b15;
+    --bon-surface-bright: #1e212c;
+    --bon-surface-container-lowest: #02030b;
+    --bon-surface-container-low: #141722;
+    --bon-surface-container: #141722;
+    --bon-surface-container-high: #1a1d28;
+    --bon-surface-container-highest: #222530;
+    --bon-add-ons-section-background: #000000;
+    --bon-success: #71dc92;
+    --bon-on-success: #00391a;
+    --bon-success-container: #005229;
+    --bon-on-success-container: #8df9ac;
+    --bon-warning: #ffb94f;
+    --bon-on-warning: #452b00;
+    --bon-warning-container: #624000;
+    --bon-on-warning-container: #ffddb3;
+    --bon-state-primary-rgb: 181 196 255;
+    --bon-state-on-surface-rgb: 228 226 230;
+    --bon-state-error-rgb: 255 180 171;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --bon-primary: #8da8ff;
+  --bon-surface-tint: #b5c4ff;
+  --bon-on-primary: #00297a;
+  --bon-primary-container: #003cac;
+  --bon-on-primary-container: #dbe1ff;
+  --bon-secondary: #bcd20b;
+  --bon-on-secondary: #2d3400;
+  --bon-secondary-container: #424b00;
+  --bon-on-secondary-container: #d2e92f;
+  --bon-error: #ffb4ab;
+  --bon-on-error: #690005;
+  --bon-error-container: #93000a;
+  --bon-on-error-container: #ffdad6;
+  --bon-background: #11131a;
+  --bon-on-background: #e2e1ec;
+  --bon-surface: #080b15;
+  --bon-on-surface: #e2e1ec;
+  --bon-surface-variant: #434654;
+  --bon-on-surface-variant: #c3c6d6;
+  --bon-outline: #8d909f;
+  --bon-outline-variant: #5b5e6c;
+  --bon-inverse-surface: #e2e1ec;
+  --bon-inverse-on-surface: #2e3038;
+  --bon-inverse-primary: #2555cc;
+  --bon-surface-dim: #080b15;
+  --bon-surface-bright: #1e212c;
+  --bon-surface-container-lowest: #02030b;
+  --bon-surface-container-low: #141722;
+  --bon-surface-container: #141722;
+  --bon-surface-container-high: #1a1d28;
+  --bon-surface-container-highest: #222530;
+  --bon-add-ons-section-background: #000000;
+  --bon-success: #71dc92;
+  --bon-on-success: #00391a;
+  --bon-success-container: #005229;
+  --bon-on-success-container: #8df9ac;
+  --bon-warning: #ffb94f;
+  --bon-on-warning: #452b00;
+  --bon-warning-container: #624000;
+  --bon-on-warning-container: #ffddb3;
+  --bon-state-primary-rgb: 181 196 255;
+  --bon-state-on-surface-rgb: 228 226 230;
+  --bon-state-error-rgb: 255 180 171;
+  color-scheme: dark;
+}
+
+/* Text recipes: family, size, weight, line height and tracking together (§3.5). */
+.bon-headline-small { font: var(--bon-weight-regular) 1.5rem / 1.3333 var(--bon-font); letter-spacing: 0; }
+.bon-headline-medium { font: var(--bon-weight-regular) 1.75rem / 1.2857 var(--bon-font); letter-spacing: 0; }
+.bon-title-large { font: var(--bon-weight-regular) 1.375rem / 1.2727 var(--bon-font); letter-spacing: 0; }
+.bon-title-large-emphasized { font: var(--bon-weight-medium) 1.375rem / 1.2727 var(--bon-font); letter-spacing: 0; }
+.bon-title-medium { font: var(--bon-weight-medium) 1rem / 1.5 var(--bon-font); letter-spacing: 0; }
+.bon-title-medium-emphasized { font: var(--bon-weight-demibold) 1rem / 1.5 var(--bon-font); letter-spacing: 0; }
+.bon-title-small { font: var(--bon-weight-medium) 0.875rem / 1.4286 var(--bon-font); letter-spacing: 0; }
+.bon-label-large { font: var(--bon-weight-medium) 0.875rem / 1.4286 var(--bon-font); letter-spacing: 0; }
+.bon-label-medium { font: var(--bon-weight-medium) 0.75rem / 1.3333 var(--bon-font); letter-spacing: 0; }
+.bon-label-small { font: var(--bon-weight-medium) 0.6875rem / 1.4545 var(--bon-font); letter-spacing: 0; }
+.bon-body-large { font: var(--bon-weight-regular) 1rem / 1.5 var(--bon-font); letter-spacing: 0; }
+.bon-body-medium { font: var(--bon-weight-regular) 0.875rem / 1.7143 var(--bon-font); letter-spacing: 0; }
+.bon-body-small { font: var(--bon-weight-regular) 0.75rem / 1.6667 var(--bon-font); letter-spacing: 0; }
+.bon-display-small { font: var(--bon-weight-regular) 2.25rem / 1.2222 var(--bon-font); letter-spacing: 0; }

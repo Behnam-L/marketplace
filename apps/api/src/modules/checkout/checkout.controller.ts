@@ -198,6 +198,13 @@ export class CheckoutController {
     return { status: await this.payments.cancel(p, version) };
   }
 
+  /** Demo only (MOCK_INTEGRATIONS=true): the mock SMS inbox for this checkout's phone. */
+  @Get('demo/sms')
+  @CheckoutAuth()
+  demoSms(@CurrentCheckout() p: CheckoutPrincipal): Promise<{ text: string; at: string }[]> {
+    return this.views.demoSms(p.orderId);
+  }
+
   @Get('result')
   @CheckoutAuth(true)
   result(@CurrentCheckout() p: CheckoutPrincipal): Promise<CheckoutResultResponse> {

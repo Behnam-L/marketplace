@@ -20,6 +20,13 @@ export async function seedAccess(ds: DataSource): Promise<void> {
       [code, PERMISSION_DESCRIPTIONS[code]],
     );
   }
+  const ROLE_DESCRIPTIONS: Record<string, string> = {
+    SuperAdmin: 'همه دسترسی‌ها؛ تنها نقش مجاز به بازنشانی ورود دومرحله‌ای',
+    Operations: 'عملیات روزانه سفارش‌ها، شرکا و مغایرت‌ها',
+    Finance: 'اسناد، صورت‌حساب‌ها، طرح‌های تسویه و بازپرداخت',
+    Support: 'پاسخ‌گویی به مشتری و مشاهده سفارش‌ها',
+    Viewer: 'فقط مشاهده',
+  };
   for (const name of DEFAULT_ROLES) {
     const existing: { id: string }[] = await ds.query(`SELECT id FROM role WHERE name = $1`, [name]);
     if (existing.length) continue;
@@ -27,7 +34,7 @@ export async function seedAccess(ds: DataSource): Promise<void> {
     await ds.query(`INSERT INTO role (id, name, description, is_system) VALUES ($1, $2, $3, $4)`, [
       id,
       name,
-      `Default ${name} role`,
+      ROLE_DESCRIPTIONS[name] ?? name,
       name === SUPER_ADMIN_ROLE,
     ]);
     if (name !== SUPER_ADMIN_ROLE) {

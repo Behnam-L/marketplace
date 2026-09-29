@@ -26,6 +26,8 @@ export interface CheckoutOrderView {
   identityStep: 'check' | 'national-id' | 'dob' | null;
   /** True when the platform runs with mock integrations (demo data must be identifiable). */
   demoMode: boolean;
+  /** The live OTP code for this order when step = otp (lets a reloaded page resume without re-sending). */
+  otp: SendOtpResponse | null;
 }
 
 export interface CreateCheckoutSessionRequest {

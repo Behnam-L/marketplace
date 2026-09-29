@@ -5,25 +5,25 @@ export const MESSAGE_EVENTS: (MessageEventDto & { fallback: string })[] = [
   {
     event: 'otp.sent',
     requiredParams: ['code'],
-    description: 'Checkout one-time password',
+    description: 'کد تأیید پرداخت',
     fallback: 'کد تأیید باجت: {{code}}\nاین کد را در اختیار دیگران قرار ندهید.',
   },
   {
     event: 'admin.invitation',
     requiredParams: ['link'],
-    description: 'Admin invitation link (24 h)',
+    description: 'لینک دعوت ادمین (۲۴ ساعت)',
     fallback: 'دعوت به پنل مدیریت باجت: {{link}}',
   },
   {
     event: 'admin.password_reset',
     requiredParams: ['link'],
-    description: 'Admin password reset link',
+    description: 'لینک بازنشانی گذرواژه ادمین',
     fallback: 'بازنشانی گذرواژه پنل باجت: {{link}}',
   },
   {
     event: 'admin.mfa_reset',
     requiredParams: ['link'],
-    description: 'Admin two-factor re-enrolment link',
+    description: 'لینک راه‌اندازی مجدد ورود دومرحله‌ای',
     fallback: 'راه‌اندازی مجدد ورود دومرحله‌ای باجت: {{link}}',
   },
 ];

@@ -144,6 +144,10 @@ describe('Checkout end to end (FR-001–061)', () => {
     const cooldown = await c.post('/otp').expect(429);
     expect(cooldown.body.error.code).toBe('OTP_RESEND_COOLDOWN');
     expect(cooldown.body.error.details.retryAfter).toBeGreaterThan(0);
+    // A reopened page resumes the live code from the view instead of re-sending.
+    const resumed = (await c.refresh()) as { otp: { otpSessionId: string; resendsLeft: number } | null };
+    expect(resumed.otp?.otpSessionId).toBe(s1.body.otpSessionId);
+    expect(resumed.otp?.resendsLeft).toBe(3);
     await ds.query(`UPDATE otp_session SET created_at = now() - interval '2 minutes' WHERE id = $1`, [s1.body.otpSessionId]);
     const s2 = await c.post('/otp').expect(201);
     const code2 = await c.latestCode();

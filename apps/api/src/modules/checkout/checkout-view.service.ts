@@ -21,7 +21,10 @@ import { SystemSettingsService } from '../system-settings/system-settings.servic
 import { WalletService } from '../wallet/wallet.service';
 import { CheckoutFlowService } from './checkout-flow.service';
 import { CheckoutPaymentsService } from './checkout-payments.service';
+import { CheckoutSessionService } from './checkout-session.service';
 import { TERMS_VERSION } from './checkout-session.service';
+import { SMS_INBOX } from '../notifications/notifications.tokens';
+import type { InboxMessage } from '../notifications/sms/sms-provider';
 
 /** Consumer-facing read models (FR-010, FR-031, FR-051). No credit data before OTP. */
 @Injectable()
@@ -36,6 +39,8 @@ export class CheckoutViewService {
     private readonly wallet: WalletService,
     private readonly settings: SystemSettingsService,
     private readonly checkoutPayments: CheckoutPaymentsService,
+    private readonly sessions: CheckoutSessionService,
+    @Inject(SMS_INBOX) private readonly inbox: InboxMessage[],
   ) {}
 
   async view(orderId: string, otpVerified: boolean, refreshExpiry = true): Promise<CheckoutOrderView> {
@@ -67,7 +72,15 @@ export class CheckoutViewService {
       serverTime: new Date().toISOString(),
       identityStep: step === 'identity' ? await this.consumers.identityStep(o.consumerUserId, o.id) : null,
       demoMode: this.config.mockIntegrations,
+      otp: step === 'otp' ? await this.sessions.current(o.id) : null,
     };
+  }
+
+  async demoSms(orderId: string): Promise<{ text: string; at: string }[]> {
+    if (!this.config.mockIntegrations) throw new AppError('NOT_FOUND', 'Not found.');
+    const o = await this.orders.mustGet(orderId);
+    const c = await this.consumers.get(o.consumerUserId);
+    return this.inbox.filter((m) => m.to === c?.phoneE164).slice(-5).reverse().map((m) => ({ text: m.text, at: m.at }));
   }
 
   /** FR-005: `returnUrl?orderId&orderNumber&status&ts&sig` — informational only. */
