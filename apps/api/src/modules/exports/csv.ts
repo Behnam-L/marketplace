@@ -9,5 +9,5 @@ function cell(v: unknown): string {
 export function toCsv(rows: Record<string, unknown>[], columns?: string[]): string {
   const cols = columns ?? [...new Set(rows.flatMap((r) => Object.keys(r)))];
   const lines = [cols.join(','), ...rows.map((r) => cols.map((c) => cell(r[c])).join(','))];
-  return `﻿${lines.join('\r\n')}\r\n`;
+  return `\uFEFF${lines.join('\r\n')}\r\n`;
 }
