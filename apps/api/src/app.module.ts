@@ -21,6 +21,8 @@ import { WalletModule } from './modules/wallet/wallet.module';
 import { TransactionsModule } from './modules/transactions/transactions.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { CheckoutModule } from './modules/checkout/checkout.module';
+import { RefundsModule } from './modules/refunds/refunds.module';
+import { ExportsModule } from './modules/exports/exports.module';
 
 @Module({
   imports: [
@@ -46,6 +48,8 @@ import { CheckoutModule } from './modules/checkout/checkout.module';
     TransactionsModule,
     OrdersModule,
     CheckoutModule,
+    RefundsModule,
+    ExportsModule,
   ],
 })
 export class AppModule {}

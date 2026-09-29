@@ -677,7 +677,6 @@ export class WalletService implements OnModuleInit {
         `t.reservationId IN (SELECT r.id FROM credit_reservation r WHERE r.status IN ('Reserved', 'ReleasePending', 'AllocationPending')
            AND COALESCE(r.hold_deadline_at, r.created_at) + interval '5 minutes' < now())`,
       );
-      qb.andWhere(`t.status <> 'Confirmed' OR t.type = 'Reservation'`);
     }
     return paginate(qb, 't', q, (rows) => this.toPtxItems(rows));
   }
