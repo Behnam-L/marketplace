@@ -11,7 +11,8 @@ export function loadTestEnv(): void {
   const text = readFileSync(join(__dirname, '..', '..', '.env.test'), 'utf8');
   for (const line of text.split('\n')) {
     const m = /^([A-Z0-9_]+)=(.*)$/.exec(line.trim());
-    if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2];
+    // DATABASE_URL always comes from .env.test (or TEST_DATABASE_URL) so tests never touch a dev database.
+    if (m && (process.env[m[1]] === undefined || m[1] === 'DATABASE_URL' || m[1] === 'NODE_ENV')) process.env[m[1]] = m[2];
   }
   if (process.env.TEST_DATABASE_URL) process.env.DATABASE_URL = process.env.TEST_DATABASE_URL;
   resetConfigCache();
