@@ -11,7 +11,8 @@ const LEVELS: LogLevel[] = ['fatal', 'error', 'warn', 'log', 'debug', 'verbose']
 async function main(): Promise<void> {
   const config = loadConfig();
   const level = LEVELS.indexOf(config.logLevel as LogLevel);
-  const app = await NestFactory.create(AppModule, { logger: LEVELS.slice(0, level < 0 ? 4 : level + 1) });
+  const app = await NestFactory.create(AppModule, {
+    rawBody: true, logger: LEVELS.slice(0, level < 0 ? 4 : level + 1) });
   configureApp(app, config);
   app.enableShutdownHooks();
   if (config.swaggerEnabled) {

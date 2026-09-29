@@ -37,7 +37,7 @@ export async function createTestApp(): Promise<{ app: INestApplication; ds: Data
   const { AppModule } = await import('../app.module');
   const { configureApp } = await import('../bootstrap');
   const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
-  const app = moduleRef.createNestApplication({ logger: ['error'] });
+  const app = moduleRef.createNestApplication({ logger: ['error'], rawBody: true });
   configureApp(app, loadConfig());
   await app.init();
   const ds = app.get(DataSource);

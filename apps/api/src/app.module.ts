@@ -10,6 +10,11 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { AdminsModule } from './modules/admins/admins.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { FilesModule } from './modules/files/files.module';
+import { AccountingModule } from './modules/accounting/accounting.module';
+import { SettlementsModule } from './modules/settlements/settlements.module';
+import { MerchantsModule } from './modules/merchants/merchants.module';
+import { CreditProvidersModule } from './modules/credit-providers/credit-providers.module';
+import { ConsumersModule } from './modules/consumers/consumers.module';
 
 @Module({
   imports: [
@@ -24,6 +29,11 @@ import { FilesModule } from './modules/files/files.module';
     AdminsModule,
     AuthModule,
     FilesModule,
+    AccountingModule,
+    SettlementsModule,
+    MerchantsModule,
+    CreditProvidersModule,
+    ConsumersModule,
   ],
 })
 export class AppModule {}

@@ -5,6 +5,7 @@ export class CoreAccess1790700680296 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "idempotency_record" ("scope" character varying(80) NOT NULL, "key" character varying(64) NOT NULL, "request_hash" character varying(64) NOT NULL, "status" character varying(16) NOT NULL, "response_code" integer, "response_body" jsonb, "expires_at" TIMESTAMP WITH TIME ZONE NOT NULL, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), CONSTRAINT "PK_43ea3d50a854b79e2f59aaad8a8" PRIMARY KEY ("scope", "key"))`);
+        await queryRunner.query(`CREATE INDEX "ix_idempotency_expires" ON "idempotency_record" ("expires_at") `);
         await queryRunner.query(`CREATE TABLE "system_setting" ("key" character varying(64) NOT NULL, "value_json" jsonb NOT NULL, "updated_by" character varying(40), "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), CONSTRAINT "PK_c6ce0e35b3c0d67dca93523ba1b" PRIMARY KEY ("key"))`);
         await queryRunner.query(`CREATE TABLE "system_setting_change" ("id" character varying(40) NOT NULL, "key" character varying(64) NOT NULL, "old_value" jsonb NOT NULL, "new_value" jsonb NOT NULL, "reason" character varying(500) NOT NULL, "changed_by" character varying(40) NOT NULL, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), CONSTRAINT "PK_c55906a51a9cf61e8dba930887c" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "message_template" ("id" character varying(40) NOT NULL, "event" character varying(60) NOT NULL, "channel" character varying(10) NOT NULL, "name" character varying(100) NOT NULL, "content" character varying(1000) NOT NULL, "params" text array NOT NULL DEFAULT '{}', "status" character varying(40) NOT NULL, "orphaned" boolean NOT NULL DEFAULT false, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), CONSTRAINT "PK_616800da109c721fb4dd2019a9b" PRIMARY KEY ("id"))`);
@@ -33,19 +34,9 @@ $$ LANGUAGE plpgsql`);
             await queryRunner.query(`CREATE TRIGGER ${t}_append_only BEFORE UPDATE OR DELETE ON "${t}" FOR EACH ROW EXECUTE FUNCTION bajet_forbid_mutation()`);
             await queryRunner.query(`CREATE TRIGGER ${t}_no_truncate BEFORE TRUNCATE ON "${t}" FOR EACH STATEMENT EXECUTE FUNCTION bajet_forbid_mutation()`);
         }
-        await queryRunner.query(`ALTER TABLE "admin_user" ADD CONSTRAINT "fk_admin_role" FOREIGN KEY ("role_id") REFERENCES "role"("id")`);
-        await queryRunner.query(`ALTER TABLE "role_permission" ADD CONSTRAINT "fk_rp_role" FOREIGN KEY ("role_id") REFERENCES "role"("id") ON DELETE CASCADE`);
-        await queryRunner.query(`ALTER TABLE "role_permission" ADD CONSTRAINT "fk_rp_permission" FOREIGN KEY ("permission_code") REFERENCES "permission"("code")`);
-        await queryRunner.query(`ALTER TABLE "admin_session" ADD CONSTRAINT "fk_session_admin" FOREIGN KEY ("admin_user_id") REFERENCES "admin_user"("id") ON DELETE CASCADE`);
-        await queryRunner.query(`CREATE INDEX "ix_idempotency_expires" ON "idempotency_record" ("expires_at")`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`DROP INDEX "ix_idempotency_expires"`);
-        await queryRunner.query(`ALTER TABLE "admin_session" DROP CONSTRAINT "fk_session_admin"`);
-        await queryRunner.query(`ALTER TABLE "role_permission" DROP CONSTRAINT "fk_rp_permission"`);
-        await queryRunner.query(`ALTER TABLE "role_permission" DROP CONSTRAINT "fk_rp_role"`);
-        await queryRunner.query(`ALTER TABLE "admin_user" DROP CONSTRAINT "fk_admin_role"`);
         for (const t of ['audit_log', 'system_setting_change']) {
             await queryRunner.query(`DROP TRIGGER ${t}_no_truncate ON "${t}"`);
             await queryRunner.query(`DROP TRIGGER ${t}_append_only ON "${t}"`);
@@ -68,6 +59,7 @@ $$ LANGUAGE plpgsql`);
         await queryRunner.query(`DROP TABLE "message_template"`);
         await queryRunner.query(`DROP TABLE "system_setting_change"`);
         await queryRunner.query(`DROP TABLE "system_setting"`);
+        await queryRunner.query(`DROP INDEX "public"."ix_idempotency_expires"`);
         await queryRunner.query(`DROP TABLE "idempotency_record"`);
         await queryRunner.query(`DROP FUNCTION bajet_forbid_mutation()`);
     }

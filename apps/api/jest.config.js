@@ -6,4 +6,5 @@ module.exports = {
   moduleNameMapper: { '^@bajet/contracts$': '<rootDir>/../../../packages/contracts/src/index.ts' },
   testEnvironment: 'node',
   testTimeout: 30000,
+  maxWorkers: 1,
 };

@@ -23,7 +23,7 @@ export interface CheckoutOrderView {
   /** Server time, so the client can correct countdowns for clock skew. */
   serverTime: IsoDateTime;
   /** Identity sub-step when step = identity. */
-  identityStep: 'national-id' | 'dob' | null;
+  identityStep: 'check' | 'national-id' | 'dob' | null;
   /** True when the platform runs with mock integrations (demo data must be identifiable). */
   demoMode: boolean;
 }

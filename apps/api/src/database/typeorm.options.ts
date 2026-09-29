@@ -1,6 +1,10 @@
 import { join } from 'node:path';
 import type { DataSourceOptions } from 'typeorm';
+import { types } from 'pg';
 import { SnakeNamingStrategy } from '../shared/database/naming.strategy';
+
+// Calendar dates stay 'YYYY-MM-DD' strings (no implicit local-time Date conversion).
+types.setTypeParser(1082, (v: string) => v);
 
 /** Shared by the Nest module, the migration CLI and tests. */
 export function typeormOptions(databaseUrl: string): DataSourceOptions {

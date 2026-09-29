@@ -1,7 +1,8 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 import { CreatedAt, Timestamp } from '../database/columns';
 
 @Entity('idempotency_record')
+@Index('ix_idempotency_expires', ['expiresAt'])
 export class IdempotencyRecord {
   @PrimaryColumn({ type: 'varchar', length: 80 })
   scope: string;
