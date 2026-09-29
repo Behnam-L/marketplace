@@ -52,6 +52,10 @@ export function CheckoutProvider({ children, fallback }: { children: ReactNode; 
   const [state, setState] = useState<LoadState>({ kind: 'loading' });
   const [skewMs, setSkew] = useState(0);
   const lastPath = useRef<string | null>(null);
+  // useNavigate() changes identity on every route change; keep it out of the deps so
+  // the one-time session exchange below does not re-run on navigation.
+  const navigateRef = useRef(navigate);
+  navigateRef.current = navigate;
 
   const setOrder = useCallback(
     (o: CheckoutOrderView) => {
@@ -59,10 +63,10 @@ export function CheckoutProvider({ children, fallback }: { children: ReactNode; 
       setSkew(new Date(o.serverTime).getTime() - Date.now());
       // The server's order status decides the route (single source of truth, §8).
       const path = `/c/${token}${STEP_PATH[o.step] ? `/${STEP_PATH[o.step]}` : ''}`;
-      if (lastPath.current !== path && window.location.pathname !== path) navigate(path, { replace: true });
+      if (lastPath.current !== path && window.location.pathname !== path) navigateRef.current(path, { replace: true });
       lastPath.current = path;
     },
-    [navigate, token],
+    [token],
   );
 
   const load = useCallback(async () => {
